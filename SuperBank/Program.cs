@@ -6,25 +6,25 @@ class Program
         Console.WriteLine("Welcome to the Bank");
 
         User user1 = new User("Tasmia", "1234");
-        user1.BankAccounts.Add(new BankAccount("aaa", 0));
-        user1.BankAccounts.Add(new BankAccount("bbb", 100));
+        user1.BankAccounts.Add(new BankAccount(user1.UserId, 0, AccountType.SalaryAccount));
+        user1.BankAccounts.Add(new BankAccount(user1.UserId, 100, AccountType.SavingsAccount));
 
-        User user2 = new User("Alex", "1234");
-        user2.BankAccounts.Add(new BankAccount("xyz", 0));
+        User user2 = new User("Alex", "12345");
+        user2.BankAccounts.Add(new BankAccount(user2.UserId, 0, AccountType.SalaryAccount));
 
-        User user3 = new User("Maria", "12334");
-        user3.BankAccounts.Add(new BankAccount("kkk", 220));
-        user3.BankAccounts.Add(new BankAccount("ccc", 700));
+        User user3 = new User("Maria", "abcd");
+        user3.BankAccounts.Add(new BankAccount(user3.UserId, 100, AccountType.SalaryAccount));
+        user3.BankAccounts.Add(new BankAccount(user3.UserId, 500, AccountType.SavingsAccount));
 
-        User user4 = new User("Patrik", "1233004");
-        user4.BankAccounts.Add(new BankAccount("kkooik", 2200));
-        user4.BankAccounts.Add(new BankAccount("cccuyg", 900));
+        User user4 = new User("Patrik", "xyz");
+        user4.BankAccounts.Add(new BankAccount(user4.UserId, 1000, AccountType.SalaryAccount));
+        user4.BankAccounts.Add(new BankAccount(user4.UserId, 2000, AccountType.SavingsAccount));
 
 
-        User user5 = new User("Elsa", "12338004");
-        user5.BankAccounts.Add(new BankAccount("kkoffoik", 1200));
-        user5.BankAccounts.Add(new BankAccount("cyuyg", 980));
-
+        User user5 = new User("Elsa", "qwer");
+        user5.BankAccounts.Add(new BankAccount(user5.UserId, 500, AccountType.SalaryAccount));
+        user5.BankAccounts.Add(new BankAccount(user5.UserId, 1000, AccountType.SavingsAccount));
+        
 
         User[] Users = new User[] {
             user1, user2, user3, user4, user5
@@ -32,7 +32,12 @@ class Program
 
         foreach (var item in Users)
         {
-            Console.WriteLine(item.UserName + "  "+item.BankAccounts.Count());
+            Console.WriteLine("User Id: "+item.UserId + " User Name: " + item.UserName + " Number of Bank account: " + item.BankAccounts.Count());
+            foreach (var account in item.BankAccounts)
+            {
+                Console.WriteLine("Account number : " +account.AccountNumber +" Acccount Type: " + account.AccountType + " Balance: " + account.Balance);
+            }
+            Console.WriteLine("-----------------");
         }
 
         newLogin:
@@ -65,8 +70,6 @@ class Program
                     {
                         case 1:
                             Console.WriteLine("Your account balance is xx");
-                        
-
                             break;
 
                         case 2:

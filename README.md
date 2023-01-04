@@ -1,2 +1,2 @@
 # SuperBank
-Create an internet bank console application for multiple user.
+Create an internet bank console application for multiple users.
