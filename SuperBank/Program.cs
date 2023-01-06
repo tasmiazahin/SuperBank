@@ -6,15 +6,15 @@ class Program
         Console.WriteLine("Welcome to the Bank");
 
         User user1 = new User("Tasmia", "1234");
-        user1.BankAccounts.Add(new BankAccount(user1.UserId, 0, AccountType.SalaryAccount));
-        user1.BankAccounts.Add(new BankAccount(user1.UserId, 100, AccountType.SavingsAccount));
+        user1.BankAccounts.Add(new BankAccount(user1.UserId, 10000, AccountType.SalaryAccount));
+        user1.BankAccounts.Add(new BankAccount(user1.UserId, 15000, AccountType.SavingsAccount));
 
         User user2 = new User("Alex", "12345");
-        user2.BankAccounts.Add(new BankAccount(user2.UserId, 0, AccountType.SalaryAccount));
+        user2.BankAccounts.Add(new BankAccount(user2.UserId, 5000, AccountType.SalaryAccount));
 
         User user3 = new User("Maria", "abcd");
-        user3.BankAccounts.Add(new BankAccount(user3.UserId, 100, AccountType.SalaryAccount));
-        user3.BankAccounts.Add(new BankAccount(user3.UserId, 500, AccountType.SavingsAccount));
+        user3.BankAccounts.Add(new BankAccount(user3.UserId, 4000, AccountType.SalaryAccount));
+        user3.BankAccounts.Add(new BankAccount(user3.UserId, 20000, AccountType.SavingsAccount));
 
         User user4 = new User("Patrik", "xyz");
         user4.BankAccounts.Add(new BankAccount(user4.UserId, 1000, AccountType.SalaryAccount));
@@ -24,23 +24,24 @@ class Program
         User user5 = new User("Elsa", "qwer");
         user5.BankAccounts.Add(new BankAccount(user5.UserId, 500, AccountType.SalaryAccount));
         user5.BankAccounts.Add(new BankAccount(user5.UserId, 1000, AccountType.SavingsAccount));
-        
+        user5.BankAccounts.Add(new BankAccount(user5.UserId, 5000, AccountType.JoinAccount));
+
 
         User[] Users = new User[] {
             user1, user2, user3, user4, user5
         };
 
-        foreach (var item in Users)
-        {
-            Console.WriteLine("User Id: "+item.UserId + " User Name: " + item.UserName + " Number of Bank account: " + item.BankAccounts.Count());
-            foreach (var account in item.BankAccounts)
-            {
-                Console.WriteLine("Account number : " +account.AccountNumber +" Acccount Type: " + account.AccountType + " Balance: " + account.Balance);
-            }
-            Console.WriteLine("-----------------");
-        }
+        //foreach (var item in Users)
+        //{
+        //    Console.WriteLine("User Id: " + item.UserId + " User Name: " + item.UserName + " Number of Bank account: " + item.BankAccounts.Count());
+        //    foreach (var account in item.BankAccounts)
+        //    {
+        //        Console.WriteLine("Account number : " + account.AccountNumber + " Acccount Type: " + account.AccountType + " Balance: " + account.Balance);
+        //    }
+        //    Console.WriteLine("-----------------");
+        //}
 
-        newLogin:
+    newLogin:
             Console.WriteLine("Welcome to your account, Please login");
             Console.WriteLine("Enter your username");
             string username = Console.ReadLine();
@@ -49,12 +50,12 @@ class Program
             string password = Console.ReadLine();
 
 
-            var foundItem = Array.Find(Users, item => item.UserName == username && item.Password == password);
+            var foundItem = Array.Find(Users, item => item.UserName.ToLower() == username.ToLower() && item.Password == password);
 
             if (foundItem != null)
             {
-           
                 Console.WriteLine("You have logged in successfully!");
+                
                 bool repeat = true;
                 while (repeat)
                 {
@@ -69,14 +70,57 @@ class Program
                     switch (input)
                     {
                         case 1:
-                            Console.WriteLine("Your account balance is xx");
+                            Console.WriteLine($"Yor are logged in as  {foundItem.UserName} and you have {foundItem.BankAccounts.Count()} accounts");
+                            foreach (var item in foundItem.BankAccounts)
+                            {
+                                Console.WriteLine($"Account number {item.AccountNumber} Account type {item.AccountType} Account balance {item.Balance}");
+                            }
                             break;
 
                         case 2:
-                            Console.WriteLine("Your have transfered 100 from account a to account b");
-                            break;
+                        //var accountNumbers = foundItem.BankAccounts.Select(item => item.AccountNumber).ToArray();
+                        //var accountSelect = 0;
 
-                        case 3:
+                        if (foundItem.BankAccounts.Count()>1)
+                        {
+                            foreach (var item in foundItem.BankAccounts)
+                            {
+                                Console.WriteLine($"Account type : {item.AccountType} , Account number : {item.AccountNumber} , Account Balance {item.Balance}");
+                            }
+                            Console.WriteLine("Enter your accountnumber from where you want to transfer");
+
+                            for (int i = 0; i < foundItem.BankAccounts.Count; i++)
+                            {
+                                Console.WriteLine($"Choose {i+1} for AccountNumber {foundItem.BankAccounts[i].AccountNumber}");
+                            }
+                            Int32.TryParse(Console.ReadLine(), out int transferFrom);
+                            
+
+
+
+                            Console.WriteLine("Enter your accountnumber where you want to transfer");
+
+                            for (int i = 0; i < foundItem.BankAccounts.Count; i++)
+                            {
+                                Console.WriteLine($"Choose {i + 1} for AccountNumber {foundItem.BankAccounts[i].AccountNumber}");
+                            }
+                            Int32.TryParse(Console.ReadLine(), out int transferTo);
+
+
+                            Console.WriteLine("Enter amount");
+                            Int32.TryParse(Console.ReadLine(), out int withdrwalAmount);
+                            foundItem.BankAccounts[transferFrom - 1].MakeWithdrawal(withdrwalAmount, DateTime.Now, $"Transfer to another account {foundItem.BankAccounts[transferTo-1].AccountNumber}");
+                            foundItem.BankAccounts[transferTo - 1].MakeDeposit(withdrwalAmount, DateTime.Now, $"New deposit from account {foundItem.BankAccounts[transferFrom - 1].AccountNumber}");
+
+                        }
+                        else
+                        {
+                            Console.WriteLine("You must have more than one account");
+                        }
+                          break;
+
+
+                    case 3:
                             Console.WriteLine("You have withdraw money ");
                             break;
 
