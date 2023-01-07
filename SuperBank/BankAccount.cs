@@ -17,6 +17,7 @@ namespace SuperBank
         public string AccountNumber { get; }
         public AccountType AccountType { get; set; }
         public int OwnerId { get; set; }
+        public string PinCode { get; set; }
         public decimal Balance
         {
             get
@@ -35,7 +36,9 @@ namespace SuperBank
 
         private static int AccountNumberSeed = 1234567890;
 
-        public BankAccount(int ownerId, decimal initialBalance, AccountType type)
+
+
+        public BankAccount(int ownerId, decimal initialBalance, AccountType type,string pinCode)
         {
             AccountNumber = AccountNumberSeed.ToString();
             AccountNumberSeed++;
@@ -44,6 +47,9 @@ namespace SuperBank
             AccountType = type;
             if (initialBalance > 0)
                 MakeDeposit(initialBalance, DateTime.Now, "Initial balance");
+
+            PinCode = pinCode;
+
         }
 
         public void MakeDeposit(decimal amount, DateTime date, string note)
