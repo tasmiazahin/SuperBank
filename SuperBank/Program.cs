@@ -27,6 +27,7 @@ class Program
         user5.BankAccounts.Add(new BankAccount(user5.UserId, 5000, AccountType.JoinAccount, "9876"));
 
 
+
         User[] Users = new User[] {
             user1, user2, user3, user4, user5
         };
@@ -55,8 +56,13 @@ class Program
             if (foundItem != null)
             {
                 Console.WriteLine("You have logged in successfully!");
-                
-                bool repeat = true;
+                Console.WriteLine($"loggedIn user id : {foundItem.UserId}");
+
+
+
+
+
+            bool repeat = true;
                 while (repeat)
                 {
                     Console.WriteLine("Select your option");
@@ -64,7 +70,8 @@ class Program
                     Console.WriteLine("[2] Transfer between accounts");
                     Console.WriteLine("[3] Withdraw money");
                     Console.WriteLine("[4] Deposit money");
-                    Console.WriteLine("[5] Log out");
+                    Console.WriteLine("[5] Open a new account");
+                    Console.WriteLine("[6] Log out");
                     Int32.TryParse(Console.ReadLine(), out int input);
 
 
@@ -159,7 +166,6 @@ class Program
 
 
                     case 4:
-                        Console.WriteLine("Deposit money");
 
                         foreach (var item in foundItem.BankAccounts)
                         {
@@ -194,6 +200,24 @@ class Program
                          break;
 
                     case 5:
+                        Console.WriteLine("Open a new account");
+                        Console.WriteLine("Enter account type, 0 for CurrentAccount, 1 for SavingsAccount, 2 for StudentAccount, 3 for SalaryAccount, 4 for JoinAccount");
+
+                        AccountType type = (AccountType) Convert.ToInt32(Console.ReadLine());
+
+                        Random random = new Random();
+
+                        string pinCode = random.Next(1000, 9999).ToString();
+
+                        foundItem.BankAccounts.Add(new BankAccount(foundItem.UserId, 0, type, pinCode));
+
+                        Console.WriteLine($"found item total bankaccount {foundItem.BankAccounts.Count}");
+                        Console.WriteLine($"User1 total bankaccount {Users[0].BankAccounts.Count}");
+
+                        break;
+
+
+                    case 6:
                         Console.WriteLine("You have logged out ");
                         repeat = false;
                         goto newLogin;
