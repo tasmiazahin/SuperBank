@@ -1,4 +1,6 @@
-﻿namespace SuperBank;
+﻿using System.Collections.Generic;
+
+namespace SuperBank;
 class Program
 {
     static void Main(string[] args)
@@ -32,16 +34,6 @@ class Program
             user1, user2, user3, user4, user5
         };
 
-        //foreach (var item in Users)
-        //{
-        //    Console.WriteLine("User Id: " + item.UserId + " User Name: " + item.UserName + " Number of Bank account: " + item.BankAccounts.Count());
-        //    foreach (var account in item.BankAccounts)
-        //    {
-        //        Console.WriteLine("Account number : " + account.AccountNumber + " Acccount Type: " + account.AccountType + " Balance: " + account.Balance);
-        //    }
-        //    Console.WriteLine("-----------------");
-        //}
-
     newLogin:
             Console.WriteLine("Welcome to your account, Please login");
             Console.WriteLine("Enter your username");
@@ -56,13 +48,8 @@ class Program
             if (foundItem != null)
             {
                 Console.WriteLine("You have logged in successfully!");
-                Console.WriteLine($"loggedIn user id : {foundItem.UserId}");
 
-
-
-
-
-            bool repeat = true;
+                bool repeat = true;
                 while (repeat)
                 {
                     Console.WriteLine("Select your option");
@@ -78,7 +65,6 @@ class Program
                     switch (input)
                     {
                         case 1:
-                            Console.WriteLine($"Yor are logged in as  {foundItem.UserName} and you have {foundItem.BankAccounts.Count()} accounts");
                             foreach (var item in foundItem.BankAccounts)
                             {
                                 Console.WriteLine($"Account number {item.AccountNumber} Account type {item.AccountType} Account balance {item.Balance}");
@@ -89,31 +75,25 @@ class Program
 
                             if (foundItem.BankAccounts.Count()>1)
                             {
-                                foreach (var item in foundItem.BankAccounts)
-                                {
-                                    Console.WriteLine($"Account type : {item.AccountType} , Account number : {item.AccountNumber} , Account Balance {item.Balance}");
-                                }
-                                Console.WriteLine("Enter your accountnumber from where you want to transfer");
+                                Console.WriteLine("Enter your account number from where you want to transfer");
 
                                 for (int i = 0; i < foundItem.BankAccounts.Count; i++)
                                 {
-                                    Console.WriteLine($"Choose {i+1} for AccountNumber {foundItem.BankAccounts[i].AccountNumber}");
+                                    Console.WriteLine($"Enter {i+1} for AccountNumber {foundItem.BankAccounts[i].AccountNumber}");
                                 }
                                 Int32.TryParse(Console.ReadLine(), out int transferFrom);
-                            
 
 
-
-                                Console.WriteLine("Enter your accountnumber where you want to transfer");
+                                Console.WriteLine("Enter your account number where you want to transfer");
 
                                 for (int i = 0; i < foundItem.BankAccounts.Count; i++)
                                 {
-                                    Console.WriteLine($"Choose {i + 1} for AccountNumber {foundItem.BankAccounts[i].AccountNumber}");
+                                    Console.WriteLine($"Enter {i + 1} for AccountNumber {foundItem.BankAccounts[i].AccountNumber}");
                                 }
                                 Int32.TryParse(Console.ReadLine(), out int transferTo);
 
 
-                                Console.WriteLine("Enter amount");
+                                Console.WriteLine("Enter amount to transfer");
                                 Double.TryParse(Console.ReadLine(), out Double amount);
 
                                 foundItem.BankAccounts[transferFrom - 1].MakeWithdrawal(amount, DateTime.Now, $"Transfer to another account {foundItem.BankAccounts[transferTo-1].AccountNumber}");
@@ -126,18 +106,12 @@ class Program
                             }
                           break;
 
-
                     case 3:
-                        
-                        foreach (var item in foundItem.BankAccounts)
-                        {
-                            Console.WriteLine($"Account type : {item.AccountType}, Account Balance {item.Balance}, Account Pincode {item.PinCode}");
-                        }
-                        Console.WriteLine("Enter your account type from you want to withdraw money");
+                        Console.WriteLine("Select your account from you want to withdraw");
 
                         for (int i = 0; i < foundItem.BankAccounts.Count; i++)
                         {
-                            Console.WriteLine($"Choose {i + 1} for Account type {foundItem.BankAccounts[i].AccountType}");
+                            Console.WriteLine($"Enter {i + 1} for Account number {foundItem.BankAccounts[i].AccountNumber}");
                         }
                         Int32.TryParse(Console.ReadLine(), out int accountInput);
 
@@ -145,80 +119,34 @@ class Program
                         bool tryPinCodeAgain = true;
                         while (tryPinCodeAgain)
                         {
-                            Console.WriteLine("Enter your Pincode");
+                            Console.WriteLine("Enter your account Pincode");
                             string pinCodeInput = Console.ReadLine();
 
                             if (foundItem.BankAccounts[accountInput - 1].PinCode == pinCodeInput)
                             {
-                                Console.WriteLine("Enter amount");
+                                Console.WriteLine("Enter amount to withdraw");
                                 double.TryParse(Console.ReadLine(), out double withdrwalAmount);
                                 foundItem.BankAccounts[accountInput - 1].MakeWithdrawal(withdrwalAmount, DateTime.Now, $"Withdrwal money");
                                 tryPinCodeAgain = false;
                             }
                             else
                             {
-                                Console.WriteLine("You have entered wrong pincode, Try again!");
+                                Console.WriteLine("You have entered wrong pincode, Please try again!");
                             }
-
                         }
                         
                         break;
 
-
                     case 4:
-
-                        foreach (var item in foundItem.BankAccounts)
-                        {
-                            Console.WriteLine($"Account type : {item.AccountType}, Account Balance {item.Balance}, Account Pincode {item.PinCode}");
-                        }
-                        Console.WriteLine("Enter your account type where you want to deposit money");
-
-                        for (int i = 0; i < foundItem.BankAccounts.Count; i++)
-                        {
-                            Console.WriteLine($"Choose {i + 1} for Account type {foundItem.BankAccounts[i].AccountType}");
-                        }
-                        Int32.TryParse(Console.ReadLine(), out int selectedAccount);
-
-                        bool tryPinAgain = true;
-                        while (tryPinAgain)
-                        {
-                            Console.WriteLine("Enter your Pincode");
-                            string pinCodeInput = Console.ReadLine();
-
-                            if (foundItem.BankAccounts[selectedAccount - 1].PinCode == pinCodeInput)
-                            {
-                                Console.WriteLine("Enter amount");
-                                double.TryParse(Console.ReadLine(), out double depositAmount);
-                                foundItem.BankAccounts[selectedAccount - 1].MakeDeposit(depositAmount, DateTime.Now, $"Deposit money");
-                                tryPinAgain = false;
-                            }
-                            else
-                            {
-                                Console.WriteLine("You have entered wrong pincode, Try again!");
-                            }
-                        }
+                         DepositToAccount(foundItem.BankAccounts);
                          break;
 
                     case 5:
-                        Console.WriteLine("Open a new account");
-                        Console.WriteLine("Enter account type, 0 for CurrentAccount, 1 for SavingsAccount, 2 for StudentAccount, 3 for SalaryAccount, 4 for JoinAccount");
-
-                        AccountType type = (AccountType) Convert.ToInt32(Console.ReadLine());
-
-                        Random random = new Random();
-
-                        string pinCode = random.Next(1000, 9999).ToString();
-
-                        foundItem.BankAccounts.Add(new BankAccount(foundItem.UserId, 0, type, pinCode));
-
-                        Console.WriteLine($"found item total bankaccount {foundItem.BankAccounts.Count}");
-                        Console.WriteLine($"User1 total bankaccount {Users[0].BankAccounts.Count}");
-
+                        CreateBankAccount(foundItem.UserId, foundItem.BankAccounts);
                         break;
 
-
                     case 6:
-                        Console.WriteLine("You have logged out ");
+                        Console.WriteLine("You have logged out! ");
                         repeat = false;
                         goto newLogin;
                         break;
@@ -243,6 +171,51 @@ class Program
             }
 
             Console.ReadLine();
+
+    }
+
+    public static void DepositToAccount(List<BankAccount> accounts)
+    {
+        Console.WriteLine("Select your account where you want to deposit");
+
+        for (int i = 0; i < accounts.Count; i++)
+        {
+            Console.WriteLine($"Enter {i + 1} for Account number {accounts[i].AccountNumber}");
+        }
+        Int32.TryParse(Console.ReadLine(), out int selectedAccount);
+
+        bool tryPinAgain = true;
+        while (tryPinAgain)
+        {
+            Console.WriteLine("Enter your Pincode");
+            string pinCodeInput = Console.ReadLine();
+
+            if (accounts[selectedAccount - 1].PinCode == pinCodeInput)
+            {
+                Console.WriteLine("Enter amount to deposit");
+                double.TryParse(Console.ReadLine(), out double depositAmount);
+                accounts[selectedAccount - 1].MakeDeposit(depositAmount, DateTime.Now, $"Deposit money");
+                tryPinAgain = false;
+            }
+            else
+            {
+                Console.WriteLine("You have entered wrong pincode, Please try again!");
+            }
+        }
+    }
+
+    public static void CreateBankAccount(int userId, List<BankAccount> accounts)
+    {
+
+        Console.WriteLine("Open a new account");
+        Console.WriteLine("Enter account type, 0 for CurrentAccount, 1 for SavingsAccount, 2 for StudentAccount, 3 for SalaryAccount, 4 for JoinAccount");
+
+        AccountType type = (AccountType)Convert.ToInt32(Console.ReadLine());
+
+        Random random = new Random();
+        string pinCode = random.Next(1000, 9999).ToString();
+
+        accounts.Add(new BankAccount(userId, 0, type, pinCode));
 
     }
 }
