@@ -63,7 +63,8 @@ class Program
                     Console.WriteLine("[1] See your accounts and balance ");
                     Console.WriteLine("[2] Transfer between accounts");
                     Console.WriteLine("[3] Withdraw money");
-                    Console.WriteLine("[4] Log out");
+                    Console.WriteLine("[4] Deposit money");
+                    Console.WriteLine("[5] Log out");
                     Int32.TryParse(Console.ReadLine(), out int input);
 
 
@@ -106,10 +107,10 @@ class Program
 
 
                                 Console.WriteLine("Enter amount");
-                                Int32.TryParse(Console.ReadLine(), out int withdrwalAmount);
+                                Double.TryParse(Console.ReadLine(), out Double amount);
 
-                                foundItem.BankAccounts[transferFrom - 1].MakeWithdrawal(withdrwalAmount, DateTime.Now, $"Transfer to another account {foundItem.BankAccounts[transferTo-1].AccountNumber}");
-                                foundItem.BankAccounts[transferTo - 1].MakeDeposit(withdrwalAmount, DateTime.Now, $"New deposit from account {foundItem.BankAccounts[transferFrom - 1].AccountNumber}");
+                                foundItem.BankAccounts[transferFrom - 1].MakeWithdrawal(amount, DateTime.Now, $"Transfer to another account {foundItem.BankAccounts[transferTo-1].AccountNumber}");
+                                foundItem.BankAccounts[transferTo - 1].MakeDeposit(amount, DateTime.Now, $"New deposit from account {foundItem.BankAccounts[transferFrom - 1].AccountNumber}");
 
                             }
                             else
@@ -143,8 +144,8 @@ class Program
                             if (foundItem.BankAccounts[accountInput - 1].PinCode == pinCodeInput)
                             {
                                 Console.WriteLine("Enter amount");
-                                Int32.TryParse(Console.ReadLine(), out int withdrwalAmount);
-                                foundItem.BankAccounts[accountInput - 1].MakeWithdrawal(withdrwalAmount, DateTime.Now, $"Withdrawal money");
+                                double.TryParse(Console.ReadLine(), out double withdrwalAmount);
+                                foundItem.BankAccounts[accountInput - 1].MakeWithdrawal(withdrwalAmount, DateTime.Now, $"Withdrwal money");
                                 tryPinCodeAgain = false;
                             }
                             else
@@ -156,7 +157,43 @@ class Program
                         
                         break;
 
+
                     case 4:
+                        Console.WriteLine("Deposit money");
+
+                        foreach (var item in foundItem.BankAccounts)
+                        {
+                            Console.WriteLine($"Account type : {item.AccountType}, Account Balance {item.Balance}, Account Pincode {item.PinCode}");
+                        }
+                        Console.WriteLine("Enter your account type where you want to deposit money");
+
+                        for (int i = 0; i < foundItem.BankAccounts.Count; i++)
+                        {
+                            Console.WriteLine($"Choose {i + 1} for Account type {foundItem.BankAccounts[i].AccountType}");
+                        }
+                        Int32.TryParse(Console.ReadLine(), out int selectedAccount);
+
+                        bool tryPinAgain = true;
+                        while (tryPinAgain)
+                        {
+                            Console.WriteLine("Enter your Pincode");
+                            string pinCodeInput = Console.ReadLine();
+
+                            if (foundItem.BankAccounts[selectedAccount - 1].PinCode == pinCodeInput)
+                            {
+                                Console.WriteLine("Enter amount");
+                                double.TryParse(Console.ReadLine(), out double depositAmount);
+                                foundItem.BankAccounts[selectedAccount - 1].MakeDeposit(depositAmount, DateTime.Now, $"Deposit money");
+                                tryPinAgain = false;
+                            }
+                            else
+                            {
+                                Console.WriteLine("You have entered wrong pincode, Try again!");
+                            }
+                        }
+                         break;
+
+                    case 5:
                         Console.WriteLine("You have logged out ");
                         repeat = false;
                         goto newLogin;

@@ -18,11 +18,11 @@ namespace SuperBank
         public AccountType AccountType { get; set; }
         public int OwnerId { get; set; }
         public string PinCode { get; set; }
-        public decimal Balance
+        public double Balance
         {
             get
             {
-                decimal balance = 0;
+                double balance = 0;
                 foreach (var item in AllTransactions)
                 {
                     balance += item.Amount;
@@ -38,7 +38,7 @@ namespace SuperBank
 
 
 
-        public BankAccount(int ownerId, decimal initialBalance, AccountType type,string pinCode)
+        public BankAccount(int ownerId, double initialBalance, AccountType type,string pinCode)
         {
             AccountNumber = AccountNumberSeed.ToString();
             AccountNumberSeed++;
@@ -52,7 +52,7 @@ namespace SuperBank
 
         }
 
-        public void MakeDeposit(decimal amount, DateTime date, string note)
+        public void MakeDeposit(double amount, DateTime date, string note)
         {
             if (amount <= 0)
             {
@@ -62,7 +62,7 @@ namespace SuperBank
             AllTransactions.Add(deposit);
         }
 
-        public void MakeWithdrawal(decimal amount, DateTime date, string note)
+        public void MakeWithdrawal(double amount, DateTime date, string note)
         {
             if (amount <= 0)
             {
@@ -80,7 +80,7 @@ namespace SuperBank
         {
             var report = new System.Text.StringBuilder();
 
-            decimal balance = 0;
+            double balance = 0;
             report.AppendLine("Date\t\tAmount\tBalance\tNote");
             foreach (var item in AllTransactions)
             {
