@@ -117,10 +117,13 @@ class Program
 
 
                         bool tryPinCodeAgain = true;
+                        int attemptLeft = 3;
                         while (tryPinCodeAgain)
                         {
+                            Console.WriteLine($"Total attempt left {attemptLeft}");
                             Console.WriteLine("Enter your account Pincode");
                             string pinCodeInput = Console.ReadLine();
+                            attemptLeft--;
 
                             if (foundItem.BankAccounts[accountInput - 1].PinCode == pinCodeInput)
                             {
@@ -131,7 +134,15 @@ class Program
                             }
                             else
                             {
-                                Console.WriteLine("You have entered wrong pincode, Please try again!");
+                               Console.WriteLine("You have entered wrong pincode, Please try again!");
+                                if (attemptLeft == 0)
+                                {
+                                    Console.WriteLine($"Too many wrong  attempt! You would need wait 3 minutes to try again, start delay at {DateTime.Now}");
+                                    // Will delay for three seconds
+                                    Thread.Sleep(3*60*1000);
+                                    Console.WriteLine($"Finished delay at {DateTime.Now}");
+                                    attemptLeft = 3;
+                                }
                             }
                         }
                         
@@ -185,10 +196,13 @@ class Program
         Int32.TryParse(Console.ReadLine(), out int selectedAccount);
 
         bool tryPinAgain = true;
+        int attemptLeft = 3;
         while (tryPinAgain)
         {
+            Console.WriteLine($"Total attempt left {attemptLeft}");
             Console.WriteLine("Enter your Pincode");
             string pinCodeInput = Console.ReadLine();
+            attemptLeft--;
 
             if (accounts[selectedAccount - 1].PinCode == pinCodeInput)
             {
@@ -200,6 +214,14 @@ class Program
             else
             {
                 Console.WriteLine("You have entered wrong pincode, Please try again!");
+                if (attemptLeft == 0)
+                {
+                    Console.WriteLine($"Too many wrong  attempts! You would need wait 3 minutes to try again, start delay at {DateTime.Now}");
+                    // Will delay for three seconds
+                    Thread.Sleep(3 * 60 * 1000);
+                    Console.WriteLine($"Finished delay at {DateTime.Now}");
+                    attemptLeft = 3;
+                }
             }
         }
     }
