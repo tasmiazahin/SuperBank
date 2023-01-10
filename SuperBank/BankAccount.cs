@@ -12,13 +12,21 @@ namespace SuperBank
         JoinAccount
     }
 
+    public enum CurrencyType
+    {
+        Euro,
+        SEK,
+    }
+
     public class BankAccount
     {
         public string AccountNumber { get; }
         public AccountType AccountType { get; set; }
         public int OwnerId { get; set; }
         public string PinCode { get; set; }
+        public CurrencyType CurrencyType { get; set; }
         public double Balance
+        
         {
             get
             {
@@ -38,13 +46,14 @@ namespace SuperBank
 
 
 
-        public BankAccount(int ownerId, double initialBalance, AccountType type,string pinCode)
+        public BankAccount(int ownerId, double initialBalance, AccountType type,string pinCode, CurrencyType currencyType)
         {
             AccountNumber = AccountNumberSeed.ToString();
             AccountNumberSeed++;
 
             OwnerId = ownerId;
             AccountType = type;
+            CurrencyType = currencyType;
             if (initialBalance > 0)
                 MakeDeposit(initialBalance, DateTime.Now, "Initial balance");
 

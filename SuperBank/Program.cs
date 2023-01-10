@@ -8,25 +8,25 @@ class Program
         Console.WriteLine("Welcome to the Bank");
 
         User user1 = new User("Tasmia", "1234");
-        user1.BankAccounts.Add(new BankAccount(user1.UserId, 10000, AccountType.SalaryAccount , "3459"));
-        user1.BankAccounts.Add(new BankAccount(user1.UserId, 15000, AccountType.SavingsAccount , "2341"));
+        user1.BankAccounts.Add(new BankAccount(user1.UserId, 10000, AccountType.SalaryAccount , "3459", CurrencyType.Euro));
+        user1.BankAccounts.Add(new BankAccount(user1.UserId, 15000, AccountType.SavingsAccount , "2341" ,CurrencyType.SEK));
 
         User user2 = new User("Alex", "12345");
-        user2.BankAccounts.Add(new BankAccount(user2.UserId, 5000, AccountType.SalaryAccount, "7845"));
+        user2.BankAccounts.Add(new BankAccount(user2.UserId, 5000, AccountType.SalaryAccount, "7845", CurrencyType.SEK));
 
         User user3 = new User("Maria", "abcd");
-        user3.BankAccounts.Add(new BankAccount(user3.UserId, 4000, AccountType.SalaryAccount ,"4327"));
-        user3.BankAccounts.Add(new BankAccount(user3.UserId, 20000, AccountType.SavingsAccount, "9724"));
+        user3.BankAccounts.Add(new BankAccount(user3.UserId, 4000, AccountType.SalaryAccount ,"4327" , CurrencyType.SEK));
+        user3.BankAccounts.Add(new BankAccount(user3.UserId, 20000, AccountType.SavingsAccount, "9724" , CurrencyType.Euro));
 
         User user4 = new User("Patrik", "xyz");
-        user4.BankAccounts.Add(new BankAccount(user4.UserId, 1000, AccountType.SalaryAccount,"4567"));
-        user4.BankAccounts.Add(new BankAccount(user4.UserId, 2000, AccountType.SavingsAccount,"1690"));
+        user4.BankAccounts.Add(new BankAccount(user4.UserId, 1000, AccountType.SalaryAccount,"4567", CurrencyType.SEK));
+        user4.BankAccounts.Add(new BankAccount(user4.UserId, 2000, AccountType.SavingsAccount,"1690", CurrencyType.SEK));
 
 
         User user5 = new User("Elsa", "qwer");
-        user5.BankAccounts.Add(new BankAccount(user5.UserId, 500, AccountType.SalaryAccount, "8856"));
-        user5.BankAccounts.Add(new BankAccount(user5.UserId, 1000, AccountType.SavingsAccount,"3486"));
-        user5.BankAccounts.Add(new BankAccount(user5.UserId, 5000, AccountType.JoinAccount, "9876"));
+        user5.BankAccounts.Add(new BankAccount(user5.UserId, 500, AccountType.SalaryAccount, "8856", CurrencyType.SEK));
+        user5.BankAccounts.Add(new BankAccount(user5.UserId, 1000, AccountType.SavingsAccount,"3486", CurrencyType.Euro));
+        user5.BankAccounts.Add(new BankAccount(user5.UserId, 5000, AccountType.JoinAccount, "9876", CurrencyType.SEK));
 
 
 
@@ -67,7 +67,7 @@ class Program
                         case 1:
                             foreach (var item in foundItem.BankAccounts)
                             {
-                                Console.WriteLine($"Account number {item.AccountNumber} Account type {item.AccountType} Account balance {item.Balance}");
+                                Console.WriteLine($"Account number {item.AccountNumber} Account type {item.AccountType} Account balance {item.Balance} {item.CurrencyType}");
                             }
                             break;
 
@@ -83,6 +83,8 @@ class Program
                                 }
                                 Int32.TryParse(Console.ReadLine(), out int transferFrom);
 
+                                
+
 
                                 Console.WriteLine("Enter your account number where you want to transfer");
 
@@ -93,11 +95,30 @@ class Program
                                 Int32.TryParse(Console.ReadLine(), out int transferTo);
 
 
-                                Console.WriteLine("Enter amount to transfer");
+
+
+                                
+
+                                Console.WriteLine($"Enter amount to transfer, current balance is {foundItem.BankAccounts[transferFrom - 1].Balance} {foundItem.BankAccounts[transferFrom - 1].CurrencyType}");
                                 Double.TryParse(Console.ReadLine(), out Double amount);
 
+                                Double amountToDeposit = 0;
+
+                                // Conversion
+                                // 1 Euro = 10 SEK
+                                // 1 SEK = 0.1 Euro
+                                if (foundItem.BankAccounts[transferFrom - 1].CurrencyType == CurrencyType.Euro && foundItem.BankAccounts[transferTo - 1].CurrencyType == CurrencyType.SEK)
+                                {
+                                    amountToDeposit = amount * 10;
+
+                                }
+                                else if (foundItem.BankAccounts[transferFrom - 1].CurrencyType == CurrencyType.SEK && foundItem.BankAccounts[transferTo - 1].CurrencyType == CurrencyType.Euro)
+                                {
+                                    amountToDeposit = amount / 10;
+                                }
+
                                 foundItem.BankAccounts[transferFrom - 1].MakeWithdrawal(amount, DateTime.Now, $"Transfer to another account {foundItem.BankAccounts[transferTo-1].AccountNumber}");
-                                foundItem.BankAccounts[transferTo - 1].MakeDeposit(amount, DateTime.Now, $"New deposit from account {foundItem.BankAccounts[transferFrom - 1].AccountNumber}");
+                                foundItem.BankAccounts[transferTo - 1].MakeDeposit(amountToDeposit, DateTime.Now, $"New deposit from account {foundItem.BankAccounts[transferFrom - 1].AccountNumber}");
 
                             }
                             else
@@ -231,13 +252,17 @@ class Program
 
         Console.WriteLine("Open a new account");
         Console.WriteLine("Enter account type, 0 for CurrentAccount, 1 for SavingsAccount, 2 for StudentAccount, 3 for SalaryAccount, 4 for JoinAccount");
+ 
 
         AccountType type = (AccountType)Convert.ToInt32(Console.ReadLine());
+
+        Console.WriteLine("Enter your currency type, 0 for Euro, 1 for SEK");
+        CurrencyType currencyType = (CurrencyType)Convert.ToInt32(Console.ReadLine());
 
         Random random = new Random();
         string pinCode = random.Next(1000, 9999).ToString();
 
-        accounts.Add(new BankAccount(userId, 0, type, pinCode));
+        accounts.Add(new BankAccount(userId, 0, type, pinCode, currencyType));
 
     }
 }
