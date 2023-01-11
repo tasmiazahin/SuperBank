@@ -26,10 +26,10 @@ namespace SuperBank
         public string PinCode { get; set; }
         public CurrencyType CurrencyType { get; set; }
         public double Balance
-        
         {
             get
             {
+                // calculate balance from AllTransactions
                 double balance = 0;
                 foreach (var item in AllTransactions)
                 {
@@ -42,6 +42,7 @@ namespace SuperBank
 
         private readonly List<Transaction> AllTransactions = new List<Transaction>();
 
+        // initial bank account number with 10 digit
         private static int AccountNumberSeed = 1234567890;
 
 
@@ -67,6 +68,7 @@ namespace SuperBank
             {
                 throw new ArgumentOutOfRangeException(nameof(amount), "Amount of deposit must be positive");
             }
+            // add a transection
             var deposit = new Transaction(amount, date, note);
             AllTransactions.Add(deposit);
         }
@@ -81,6 +83,7 @@ namespace SuperBank
             {
                 throw new InvalidOperationException("Not sufficient funds for this withdrawal");
             }
+            // add a transection
             var withdrawal = new Transaction(-amount, date, note);
             AllTransactions.Add(withdrawal);
         }
