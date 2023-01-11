@@ -50,11 +50,13 @@ namespace SuperBank
         public BankAccount(int ownerId, double initialBalance, AccountType type,string pinCode, CurrencyType currencyType)
         {
             AccountNumber = AccountNumberSeed.ToString();
+            // Increment account number by 1
             AccountNumberSeed++;
 
             OwnerId = ownerId;
             AccountType = type;
             CurrencyType = currencyType;
+            // Make a transaction for initial balance.
             if (initialBalance > 0)
                 MakeDeposit(initialBalance, DateTime.Now, "Initial balance");
 
@@ -68,7 +70,7 @@ namespace SuperBank
             {
                 throw new ArgumentOutOfRangeException(nameof(amount), "Amount of deposit must be positive");
             }
-            // add a transection
+            // add a transaction
             var deposit = new Transaction(amount, date, note);
             AllTransactions.Add(deposit);
         }
@@ -86,21 +88,6 @@ namespace SuperBank
             // add a transection
             var withdrawal = new Transaction(-amount, date, note);
             AllTransactions.Add(withdrawal);
-        }
-
-        public string GetAccountHistory()
-        {
-            var report = new System.Text.StringBuilder();
-
-            double balance = 0;
-            report.AppendLine("Date\t\tAmount\tBalance\tNote");
-            foreach (var item in AllTransactions)
-            {
-                balance += item.Amount;
-                report.AppendLine($"{item.Date.ToShortDateString()}\t{item.Amount}\t{balance}\t{item.Notes}");
-            }
-
-            return report.ToString();
         }
     }
 }

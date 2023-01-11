@@ -53,6 +53,7 @@ class Program
             Console.WriteLine("You have logged in successfully!");
 
             bool repeat = true;
+            bool terminateProgram = false;
             // Using while loop to allow logged in user to continuouly return to the main menu.
             while (repeat)
             {
@@ -82,6 +83,7 @@ class Program
                         // Number of accounts should be more than 1 to allow loggin in user to transfer amount between his accounts
                         if (foundItem.BankAccounts.Count() > 1)
                         {
+                            // Exception handling to prevent program crashing 
                             try
                             {
                                 Console.WriteLine("Enter your account number from where you want to transfer");
@@ -140,7 +142,7 @@ class Program
                         break;
 
                     case 3:
-
+                        // Exception handling to prevent program crashing 
                         try
                         {
                             Console.WriteLine("Select your account from you want to withdraw");
@@ -212,7 +214,6 @@ class Program
                         {
                             Console.WriteLine($"Transfer failed! \n{ex}");
                         }
-                        
                         break;
 
                     case 6:
@@ -220,21 +221,26 @@ class Program
                         repeat = false;
                         goto newLogin;
                         break;
+
                     case 7:
                         Console.WriteLine("Terminated the program! ");
                         repeat = false;
+                        terminateProgram = true;
                         break;
 
                     default:
                         Console.WriteLine("You have to choose option between 1-4");
                         break;
                 }
-
-                Console.WriteLine("Please press Enter to go to the main menu");
-                // Program will wait until user press 'Enter' key 
-                while (Console.ReadKey().Key != ConsoleKey.Enter)
+                if (!terminateProgram)
                 {
-                    Console.WriteLine("\nPress enter to go to main menu");
+                    Console.WriteLine("Please press Enter to go to the main menu");
+                    // Program will wait until user press 'Enter' key 
+                    while (Console.ReadKey().Key != ConsoleKey.Enter)
+                    {
+                        Console.WriteLine("\nPress enter to go to main menu");
+                    }
+
                 }
             }
         }
@@ -296,9 +302,11 @@ class Program
 
         Console.WriteLine("Open a new account");
         Console.WriteLine("Enter account type, 0 for CurrentAccount, 1 for SavingsAccount, 2 for StudentAccount, 3 for SalaryAccount, 4 for JoinAccount");
+        // Explicit casting to AccountType
         AccountType type = (AccountType)Convert.ToInt32(Console.ReadLine());
 
         Console.WriteLine("Enter your currency type, 0 for Euro, 1 for SEK");
+        // Explicit casting to CurrencyType
         CurrencyType currencyType = (CurrencyType)Convert.ToInt32(Console.ReadLine());
 
         // generate 4 digit pincode randomly
