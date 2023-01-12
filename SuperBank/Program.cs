@@ -60,12 +60,13 @@ class Program
                 // menu for logged in user
                 Console.WriteLine("Select your option");
                 Console.WriteLine("[1] See your accounts and balance ");
-                Console.WriteLine("[2] Transfer between accounts");
+                Console.WriteLine("[2] Transfer amount between own accounts");
                 Console.WriteLine("[3] Withdraw money");
                 Console.WriteLine("[4] Deposit money");
                 Console.WriteLine("[5] Open a new account");
-                Console.WriteLine("[6] Log out");
-                Console.WriteLine("[7] Terminate the program");
+                Console.WriteLine("[6] Transfer amount between different user account");
+                Console.WriteLine("[7] Log out");
+                Console.WriteLine("[8] Terminate the program");
                 Int32.TryParse(Console.ReadLine(), out int input);
 
                 
@@ -215,14 +216,24 @@ class Program
                             Console.WriteLine($"Transfer failed! \n{ex}");
                         }
                         break;
-
                     case 6:
+                        try
+                        {
+                            TransferToOtherUserAccount(Users, foundItem);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Transfer failed! \n{ex}");
+                        }
+                        break;
+
+                    case 7:
                         Console.WriteLine("You have logged out! ");
                         repeat = false;
                         goto newLogin;
                         break;
 
-                    case 7:
+                    case 8:
                         Console.WriteLine("Terminated the program! ");
                         repeat = false;
                         terminateProgram = true;
@@ -317,6 +328,73 @@ class Program
         accounts.Add(new BankAccount(userId, 0, type, pinCode, currencyType));
 
     }
+
+    public static void TransferToOtherUserAccount(User[] users, User loggedInUser)
+    {
+       // Exception handling to prevent program crashing 
+        try
+        {
+            Console.WriteLine("Enter your account number from where you want to transfer");
+
+            for (int i = 0; i < loggedInUser.BankAccounts.Count; i++)
+            {
+                Console.WriteLine($"Enter {i + 1} for AccountNumber {loggedInUser.BankAccounts[i].AccountNumber}");
+            }
+            Int32.TryParse(Console.ReadLine(), out int transferFrom);
+
+            BankAccount senderAccount = loggedInUser.BankAccounts[transferFrom - 1];
+
+            Console.WriteLine("Enter 10 digit account number where you want to transfer, for example 1234567890");
+            string receiverAccountNumber = Console.ReadLine();
+
+            // Selecting all accounts from all users using selectmany and then get receiver account 
+            BankAccount receiverAccount = users.SelectMany(o => o.BankAccounts).Where(account=>account.AccountNumber==receiverAccountNumber).FirstOrDefault();
+
+            if (receiverAccount != null)
+            {
+                Console.WriteLine($"Enter amount to transfer, current balance is {senderAccount.Balance} {senderAccount.CurrencyType}");
+                Double.TryParse(Console.ReadLine(), out Double amount);
+
+                Double amountToDeposit = 0;
+
+                // Currency Conversion and assuming following conversation rate
+                // 1 Euro = 10 SEK
+                // 1 SEK = 0.1 Euro
+                if (senderAccount.CurrencyType == CurrencyType.Euro && receiverAccount.CurrencyType == CurrencyType.SEK)
+                {
+                    amountToDeposit = amount * 10;
+
+                }
+                else if (senderAccount.CurrencyType == CurrencyType.SEK && receiverAccount.CurrencyType == CurrencyType.Euro)
+                {
+                    amountToDeposit = amount / 10;
+                }
+                else
+                {
+                    amountToDeposit = amount;
+                }
+
+                // Check sender and receiver account owner is not same.
+                if (senderAccount.OwnerId != receiverAccount.OwnerId)
+                {
+                    // Actual transfer by calling accounts withdrawal and deposite mehtods
+                    senderAccount.MakeWithdrawal(amount, DateTime.Now, $"Transfer to another account {receiverAccount.AccountNumber}");
+                    receiverAccount.MakeDeposit(amountToDeposit, DateTime.Now, $"New deposit from account {senderAccount.AccountNumber}");
+                    Console.WriteLine("Successfully transfered amount to another user account");
+                }
+                else
+                {
+                    Console.WriteLine("Operation cancelled because you are trying to transfer amount to your own account. Please choose option number 2 from the menu");
+                }
+            }
+            
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Transfer failed! \n{ex}");
+        }
+
+    }     
 }
 
 
